@@ -14,6 +14,7 @@ to install PostgreSQL 15.
 
 ```
 brew install postgresql@15
+brew services start postgresql@15
 ```
 
 To install Rubygem dependencies, simply use Bundler:
@@ -29,7 +30,7 @@ You may need to give Bundler some help to locate your local PostgreSQL installat
 bundle config build.pg --with-pg-config=/usr/local/opt/postgresql@15/bin/pg_config
 
 # Apple Silicon Mac
-bundle config build.pg --with-pg-config=/usr/local/opt/postgresql@15/bin/pg_config
+bundle config build.pg --with-pg-config=/opt/homebrew/opt/postgresql@15/bin/pg_config
 ```
 
 Verify the `pg_config` path above with your local installation - it may differ.
