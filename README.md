@@ -60,13 +60,13 @@ commands are available to everyone who clones the repo.
 
 ### Skills
 
+- **`/plan [task description]`** — Plans the implementation approach before any
+  code is written. It enters Plan mode (read-only), explores the codebase, and
+  presents an approach for your approval. Use it before starting non-trivial work.
 - **`/review [PR number, GitHub URL, or branch — omit for current branch]`** —
   Runs a multi-agent code review. It routes the diff to focused review agents,
   synthesizes their findings by severity (🔴 / 🟠 / 🟡), and can post the result
   as a PR comment.
-- **`/plan [task description]`** — Plans the implementation approach before any
-  code is written. It enters Plan mode (read-only), explores the codebase, and
-  presents an approach for your approval. Use it before starting non-trivial work.
 
 ### Review agents
 
