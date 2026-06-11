@@ -11,8 +11,8 @@ We use PostgreSQL as our primary persistence store. On Mac OS, use [Homebrew](ht
 to install the latest PostgreSQL version.
 
 ```
-brew install postgresql@17
-brew services start postgresql@17
+brew install postgresql@18
+brew services start postgresql@18
 ```
 
 ### Ruby Version & Gems
