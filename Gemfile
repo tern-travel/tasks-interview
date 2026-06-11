@@ -66,6 +66,9 @@ group :development, :test do
 end
 
 group :development do
+  # Ruby style guide, linter, and formatter [https://github.com/standardrb/standard]
+  gem "standard", require: false
+
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
 
