@@ -2,7 +2,7 @@
 name: plan
 description: Plan the implementation approach for a task before writing code. Enters Plan mode, explores the codebase, designs an approach, and presents it for approval before any implementation. Use before starting any non-trivial work.
 argument-hint: "[task description or ticket context]"
-allowed-tools: Read, Grep, Glob, Bash, Task, EnterPlanMode, ExitPlanMode, AskUserQuestion
+allowed-tools: Read, Grep, Glob, Bash, Agent, EnterPlanMode, ExitPlanMode, AskUserQuestion
 model: inherit
 ---
 
@@ -16,20 +16,21 @@ Rails app — keep the plan proportional to the work and grounded in `CLAUDE.md`
 
 <task_input>$ARGUMENTS</task_input>
 
+## Guidance: briefing subagents
+
+When you launch `Explore` or `Plan` agents (via the `Agent` tool), they start fresh
+with zero context — they haven't seen this conversation. Brief each one like a
+colleague who just walked in: what you're trying to accomplish and why, what you've
+already learned or ruled out, and the specific files/areas to look at. Terse prompts
+produce shallow work. Never offload synthesis onto an agent ("based on your
+findings, implement it") — do the understanding yourself and tell the agent exactly
+what you need.
+
 ## Step 1: Enter Plan mode
 
 Call `EnterPlanMode` before doing anything else. Plan mode is **read-only**: you
 will explore and design, but make no edits, commits, or other changes until the
 user approves the plan and you exit plan mode.
-
-## Briefing subagents
-
-When you launch `Explore` or `Plan` agents, they start fresh with zero context —
-they haven't seen this conversation. Brief each one like a colleague who just
-walked in: what you're trying to accomplish and why, what you've already learned or
-ruled out, and the specific files/areas to look at. Terse prompts produce shallow
-work. Never offload synthesis onto an agent ("based on your findings, implement
-it") — do the understanding yourself and tell the agent exactly what you need.
 
 ## Step 2: Understand the request
 
