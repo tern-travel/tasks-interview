@@ -51,3 +51,31 @@ Rails server process and a local Tailwind process. To start them, run:
 ```
 bin/dev
 ```
+
+## Claude Code
+
+This repo includes custom [Claude Code](https://claude.com/claude-code) tooling
+under `.claude/`. If you use Claude Code in this project, the following slash
+commands are available to everyone who clones the repo.
+
+### Skills
+
+- **`/plan [task description]`** — Plans the implementation approach before any
+  code is written. It enters Plan mode (read-only), explores the codebase, and
+  presents an approach for your approval. Use it before starting non-trivial work.
+- **`/review [PR number, GitHub URL, or branch — omit for current branch]`** —
+  Runs a multi-agent code review. It routes the diff to focused review agents,
+  synthesizes their findings by severity (🔴 / 🟠 / 🟡), and can post the result
+  as a PR comment.
+
+### Review agents
+
+`/review` is backed by a handful of focused agents in `.claude/agents/`, each
+applying one lens to the change:
+
+- **`review-rails`** — correctness, bugs, and idiomatic Rails conventions.
+- **`review-security`** — authentication, authorization, mass assignment, and injection.
+- **`review-simplicity`** — over-engineering, duplication, and dead code (YAGNI).
+- **`review-testing`** — RSpec/FactoryBot coverage and test quality.
+
+See [`CLAUDE.md`](CLAUDE.md) for the code conventions these tools enforce.
