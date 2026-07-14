@@ -47,24 +47,12 @@ end
 # By default only the curated tasks above are seeded. Set SEED_TASK_COUNT to
 # top the table up to a larger backlog when you need volume.
 target_count = ENV.fetch("SEED_TASK_COUNT", 16).to_i
+missing = target_count - Task.count
 
-if Task.count < target_count
+if missing.positive?
   now = Time.current
-  verbs = %w[Book Confirm Email Review Draft Plan Order Sync Archive Update Reconcile Schedule Cancel Rebook Invoice]
-  destinations = %w[Lisbon Kyoto Marrakech Patagonia Reykjavik Hanoi Cusco Porto Split Tbilisi Oaxaca Lagos]
-  nouns = ["itinerary", "hotel block", "flight change", "transfer", "deposit", "welcome packet", "visa", "insurance", "budget", "supplier contract"]
-
-  rows = Array.new(target_count - Task.count) do
-    title = "#{verbs.sample} #{destinations.sample} #{nouns.sample}"
-    title = title.downcase if rand < 0.1
-
-    {
-      title: title,
-      complete: rand < 0.4,
-      description: (Faker::Lorem.sentence(word_count: rand(4..10)) if rand < 0.7),
-      created_at: now,
-      updated_at: now
-    }
+  rows = Array.new(missing) do |index|
+    {title: "Backlog task #{index + 1}", complete: index.even?, created_at: now, updated_at: now}
   end
 
   rows.each_slice(1_000) { |slice| Task.insert_all(slice) }
