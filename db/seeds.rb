@@ -43,3 +43,32 @@ tasks = [
 tasks.each do |attributes|
   Task.where(title: attributes[:title]).first_or_create!(attributes.except(:title))
 end
+
+# Bulk volume so the task index is *visibly* slow once an N+1 lands on it (e.g.
+# rendering an assignee per row without eager loading) — the performance
+# deep-dive needs a real symptom to diagnose. Skipped in test so the suite stays
+# fast and task counts stay predictable; override the target with SEED_TASK_COUNT.
+target_count = ENV.fetch("SEED_TASK_COUNT", Rails.env.test? ? 0 : 2_000).to_i
+
+if Task.count < target_count
+  now = Time.current
+  verbs = %w[Book Confirm Email Review Draft Plan Order Sync Archive Update Reconcile Schedule Cancel Rebook Invoice]
+  destinations = %w[Lisbon Kyoto Marrakech Patagonia Reykjavik Hanoi Cusco Porto Split Tbilisi Oaxaca Lagos]
+  nouns = ["itinerary", "hotel block", "flight change", "transfer", "deposit", "welcome packet", "visa", "insurance", "budget", "supplier contract"]
+
+  rows = Array.new(target_count - Task.count) do
+    title = "#{verbs.sample} #{destinations.sample} #{nouns.sample}"
+    # Mix in the occasional lowercase title so case-sensitivity bites at volume.
+    title = title.downcase if rand < 0.1
+
+    {
+      title: title,
+      complete: rand < 0.4,
+      description: (Faker::Lorem.sentence(word_count: rand(4..10)) if rand < 0.7),
+      created_at: now,
+      updated_at: now
+    }
+  end
+
+  rows.each_slice(1_000) { |slice| Task.insert_all(slice) }
+end
