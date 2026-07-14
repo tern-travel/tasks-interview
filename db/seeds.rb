@@ -44,11 +44,9 @@ tasks.each do |attributes|
   Task.where(title: attributes[:title]).first_or_create!(attributes.except(:title))
 end
 
-# Bulk volume so the task index is *visibly* slow once an N+1 lands on it (e.g.
-# rendering an assignee per row without eager loading) — the performance
-# deep-dive needs a real symptom to diagnose. Skipped in test so the suite stays
-# fast and task counts stay predictable; override the target with SEED_TASK_COUNT.
-target_count = ENV.fetch("SEED_TASK_COUNT", Rails.env.test? ? 0 : 2_000).to_i
+# By default only the curated tasks above are seeded. Set SEED_TASK_COUNT to
+# top the table up to a larger backlog when you need volume.
+target_count = ENV.fetch("SEED_TASK_COUNT", 16).to_i
 
 if Task.count < target_count
   now = Time.current
@@ -58,7 +56,6 @@ if Task.count < target_count
 
   rows = Array.new(target_count - Task.count) do
     title = "#{verbs.sample} #{destinations.sample} #{nouns.sample}"
-    # Mix in the occasional lowercase title so case-sensitivity bites at volume.
     title = title.downcase if rand < 0.1
 
     {
