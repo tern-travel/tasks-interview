@@ -43,3 +43,17 @@ tasks = [
 tasks.each do |attributes|
   Task.where(title: attributes[:title]).first_or_create!(attributes.except(:title))
 end
+
+# By default only the curated tasks above are seeded. Set SEED_TASK_COUNT to
+# top the table up to a larger backlog when you need volume.
+target_count = ENV.fetch("SEED_TASK_COUNT", 16).to_i
+missing = target_count - Task.count
+
+if missing.positive?
+  now = Time.current
+  rows = Array.new(missing) do |index|
+    {title: "Backlog task #{index + 1}", complete: index.even?, created_at: now, updated_at: now}
+  end
+
+  rows.each_slice(1_000) { |slice| Task.insert_all(slice) }
+end
