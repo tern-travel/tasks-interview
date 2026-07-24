@@ -43,3 +43,14 @@ tasks = [
 tasks.each do |attributes|
   Task.where(title: attributes[:title]).first_or_create!(attributes.except(:title))
 end
+
+legacy_tasks = [
+  {title: "Buy tickets: book the 9am AA flight to Cancun", complete: false},
+  {title: "Call hotel: confirm the late checkout for the Rivera party", complete: false},
+  {title: "Passport: renew before the Japan trip", complete: true},
+  {title: "Insurance: add the Patagonia leg to the policy", complete: false}
+]
+
+legacy_tasks.each do |attributes|
+  Task.where(title: attributes[:title]).first_or_create!(attributes.except(:title))
+end
